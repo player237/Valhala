@@ -1,11 +1,22 @@
-  name: CI
+name: Tests
 
-on: [push]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
-      - name: Run script
-        run: echo "CI working"
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run repository tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Validate expected content in test file.
+          grep -Fq "un beau garcon" test.txt
+          echo "Tests passed"
